@@ -6,6 +6,16 @@ import { installWindowP, pairStatus } from "./mem.js";
 import { int64 } from "./int64.js";
 import { offsetsFor } from "./ps4_offsets.js";
 
+function forceGC() {
+    var storage = [];
+    for (var i = 0; i < 32; i++) {
+        storage.push(new Uint8Array(0x40000));
+    }
+    storage = null;
+	setTimeout(forceGC, 3000)
+}
+setTimeout(forceGC, 1000)
+
 function ensureHostConsole() {
     var out = document.getElementById("out");
     var st = document.getElementById("state");
@@ -119,14 +129,14 @@ const AF_UNIX = 1, AF_INET6 = 28, SOCK_STREAM = 1;
 const IPPROTO_IPV6 = 41, IPV6_RTHDR = 51;
 const UCRED_SIZE = 0x168;
 const KQUEUE_SIZE = 0x100;
-const NUM_LEAK_KQUEUE = 5000;
+const NUM_LEAK_KQUEUE = 4096;
 
 const KQ_BATCH = 8;
 const KQ_HDR_MAGIC = 0x1430000;
 
 const NUM_UIO_IOV = 0x14, UIO_SIZE = 0x30;
-const NUM_UIO_SPRAY = 10000;
-const NUM_IOV_SPRAY_MAX = 100000;
+const NUM_UIO_SPRAY = 8192;
+const NUM_IOV_SPRAY_MAX = 65536;
 const UIO_READ = 0, UIO_WRITE = 1, UIO_SYSSPACE = 1;
 const SOL_SOCKET = 0xffff, SO_SNDBUF = 0x1001;
 
@@ -134,7 +144,7 @@ const PIPEBUF_SIZEOF = 0x18, PIPE_PAGE = 0x4000, FILEDESCENT_SIZE = 8;
 const F_SETFL = 4, O_NONBLOCK = 4;
 const IP6_RTHDR0_SIZE = 8, IN6_ADDR_SIZE = 0x10;
 const NUM_MSG_IOV = 0x17, IOVEC_SIZE = 0x10, MSGHDR_SIZE = 0x30;
-const NUM_IPV6_SOCK = 0x100;
+const NUM_IPV6_SOCK = 0x80;
 
 const RTHDR_TAG = 0x13370000;
 const MAX_ROUNDS_TWIN = 10, MAX_ROUNDS_TRIPLET = 500, FIND_TRIPLET_FAST = 5000;
